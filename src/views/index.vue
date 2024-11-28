@@ -1,22 +1,16 @@
 <template>
-  <div class="index-page">
+  <div class="index-page" v-if="indexData !=null">
+    <!-- v-if="indexData !=null  请求的首页数据不为空  再渲染页面 -->
     <!-- 首页 -->
     <van-nav-bar title="首页" placeholder fixed />
     <!-- 轮播图 -->
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="1baeae">
-      <van-swipe-item>
-        <img data-v-2831e644="" src="https://newbee-mall.oss-cn-beijing.aliyuncs.com/images/banner-mate40.png" alt="" />
-      </van-swipe-item>
-
-      <van-swipe-item>
-        <img data-v-2831e644="" src="https://newbee-mall.oss-cn-beijing.aliyuncs.com/images/banner2.png" alt="" />
-      </van-swipe-item>
-
-      <van-swipe-item>
-        <img data-v-2831e644="" src="https://newbee-mall.oss-cn-beijing.aliyuncs.com/images/banner1.png" alt="" />
+      <van-swipe-item v-for="(item,index) in indexData.swiperList" :key="index">
+        <img :src="item.imgurl" />
       </van-swipe-item>
     </van-swipe>
     <!-- 金刚区 -->
+     
     <van-grid column-num="5">
       <van-grid-item v-for="value in 10" :key="value" icon="photo-o" text="文字" />
     </van-grid>
@@ -35,7 +29,7 @@
     <!-- 导航栏 -->
     <van-tabbar v-model="active" placeholder route>
       <van-tabbar-item icon="home-o" to="/">首页</van-tabbar-item>
-      <van-tabbar-item icon="apps-o">分类</van-tabbar-item>
+      <van-tabbar-item icon="apps-o" to="/classxx">分类</van-tabbar-item>
       <van-tabbar-item badge="1" to="/shopCar" icon="shopping-cart-o">购物车</van-tabbar-item>
       <van-tabbar-item icon="user-circle-o">我的</van-tabbar-item>
     </van-tabbar>
@@ -52,11 +46,38 @@ export default {
 
   data() {
     return {
+      //首页数据
+      indexData:null,
       active: 0,
     };
   },
 
-  created() { },
+  created() {
+    /* axios:封装的一个网络请求库，用来跟服务端进行数据交互。
+      使用步骤：
+        -安装  npm i axios
+        -使用 
+      -再将main.js中将axios挂载到Vue全局对象上
+        -发起一个get请求：this.$axios.get(请求地址，请求参数)
+        -常用请求方式：
+          - get:常用作获取数据
+          - post:常用作提交数据
+    */
+    //http://localhost:8888/data 首页数据接口地址
+    //http://localhost:8888/category 分类数据接口地址
+    //组件初始化成功后，获取首页数据
+    this.$axios.get("../assets/data.json").then(res => {
+      //.then() 请求成功的回调函数
+      // res 请求到的数据
+      console.log(res,"首页数据")
+      this.indexData=res.data
+      //
+    }).catch(err=>{
+      // .catch() 请求失败的回调函数
+      // err失败的提示信息
+      console.error(err);
+    })
+  },
 
   methods: {},
 };

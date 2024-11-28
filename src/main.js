@@ -12,6 +12,12 @@ Vue.config.productionTip = false
 Vue.prototype.$goBack=()=>{
   router.go(-1)
 }
+//导入axios并挂载Vue全局对象
+import axios from "axios"
+
+Vue.prototype.$axios=axios;
+
+Vue.config.productionTip=false
 
 new Vue({
   router,
